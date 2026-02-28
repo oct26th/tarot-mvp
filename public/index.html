@@ -22,7 +22,7 @@
 
     <header class="border-b-2 border-[#00ff41] pb-2 mb-8 flex justify-between items-end">
         <div>
-            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v2.1.0</span></h1>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v2.3.0</span></h1>
             <p class="text-xs mt-1 opacity-70">CONNECTION: SECURE // PROTOCOL: GHOST_IN_THE_SHELL</p>
         </div>
         <div class="text-right text-xs hidden md:block">
@@ -113,13 +113,13 @@
                     };
 
                     data.cards.forEach((card, index) => {
-                        // Increased icon size (text-6xl -> text-8xl) and font sizes for the card block
+                        // Massive card size for mobile
                         const cardHtml = `
-                            <div class="card-glitch relative border-2 border-[#00ff41] p-6 text-center transition-all bg-black/40">
-                                <div class="absolute top-2 left-3 text-xs opacity-70 border-b border-[#00ff41]/50 pb-1">[ ${getLabel(spreadType, index)} ]</div>
-                                <div class="text-7xl md:text-8xl mt-8 mb-6 drop-shadow-[0_0_15px_rgba(0,255,65,0.8)]">🃏</div>
-                                <h3 class="text-2xl md:text-3xl font-bold tracking-widest text-shadow-glow mb-2">${card.name_tw}</h3>
-                                <p class="text-lg opacity-90">${card.direction}</p>
+                            <div class="card-glitch relative border-2 border-[#00ff41] p-10 md:p-14 text-center transition-all bg-black/40 min-h-[350px] flex flex-col items-center justify-center">
+                                <div class="absolute top-4 left-4 text-sm font-bold opacity-80 border-b border-[#00ff41]/50 pb-1 tracking-wider">[ ${getLabel(spreadType, index)} ]</div>
+                                <div class="text-[8rem] md:text-[10rem] mt-6 mb-4 drop-shadow-[0_0_25px_rgba(0,255,65,0.9)]">🃏</div>
+                                <h3 class="text-4xl md:text-5xl font-bold tracking-widest text-shadow-glow mb-3">${card.name_tw}</h3>
+                                <p class="text-2xl opacity-90 font-bold tracking-wider text-[#00ff41]">${card.direction}</p>
                             </div>
                         `;
                         container.innerHTML += cardHtml;
