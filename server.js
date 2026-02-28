@@ -61,7 +61,7 @@ app.post('/api/draw', async (req, res) => {
         direction,
         keywords
       },
-      interpretation: data.content[0].text
+      interpretation: data.choices ? data.choices[0].message.content : (data.content ? data.content[0].text : JSON.stringify(data))
     });
   } catch (error) {
     console.error(error);
