@@ -54,13 +54,24 @@ app.post('/api/draw', async (req, res) => {
 
     const data = await response.json();
     
-    // Debug logic: try to extract text from Anthropic format, fallback to JSON
+    // MiniMax M2.5 returns content array. We need to find the text part, ignoring the "thinking" part if present.
     let interpretationText = '';
-    if (data && data.content && Array.isArray(data.content) && data.content[0] && data.content[0].text) {
-        interpretationText = data.content[0].text;
+    
+    if (data && data.content && Array.isArray(data.content)) {
+        // Find the element that has 'text' property
+        const textElement = data.content.find(item => item.text);
+        if (textElement && textElement.text) {
+            interpretationText = textElement.text;
+        } else {
+            // Fallback: just dump the content array to see what's inside
+            interpretationText = JSON.stringify(data.content);
+        }
     } else {
         interpretationText = JSON.stringify(data);
     }
+
+    // Clean up interpretation text by parsing out newlines
+    interpretationText = interpretationText.replace(/\n/g, '<br/>');
 
     res.json({
       success: true,
