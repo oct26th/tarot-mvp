@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAROT_OS // 仿生人神諭終端 v3.0</title>
+    <title>TAROT_OS // 仿生人神諭終端 v3.1</title>
     <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -17,13 +17,25 @@
         .loading { display: none; }
         strong, b { color: #fff; text-shadow: 0 0 5px #00ff41; font-weight: 700; }
         .reversed-card { transform: rotate(180deg); }
+        
+        /* New Cyberpunk Hologram Filter */
+        .hologram-filter {
+            filter: grayscale(100%) sepia(100%) hue-rotate(85deg) saturate(300%) contrast(1.5) brightness(1.2);
+            mix-blend-mode: screen;
+            opacity: 0.85;
+            transition: all 0.3s ease;
+        }
+        .hologram-filter:hover {
+            opacity: 1;
+            filter: grayscale(100%) sepia(100%) hue-rotate(85deg) saturate(400%) contrast(1.5) brightness(1.4);
+        }
     </style>
 </head>
 <body class="min-h-screen w-screen overflow-x-hidden overflow-y-auto flex flex-col p-4 md:p-8 selection:bg-green-900 selection:text-green-100">
 
     <header class="border-b-2 border-[#00ff41] pb-2 mb-8 flex justify-between items-end">
         <div>
-            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v3.0.0</span></h1>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v3.1.0</span></h1>
             <p class="text-xs mt-1 opacity-70">CONNECTION: SECURE // PROTOCOL: GHOST_IN_THE_SHELL</p>
         </div>
         <div class="text-right text-xs hidden md:block">
@@ -120,8 +132,8 @@
                             <div class="card-glitch relative border border-[#00ff41] p-6 pb-4 text-center transition-all bg-black/40 flex flex-col items-center">
                                 <div class="absolute top-0 left-0 bg-[#00ff41] text-black px-2 py-1 text-xs font-bold w-full text-left tracking-widest">[ ${getLabel(spreadType, index)} ]</div>
                                 
-                                <div class="mt-8 mb-4 border-2 border-[#00ff41] p-1 rounded-sm bg-black overflow-hidden shadow-[0_0_15px_rgba(0,255,65,0.3)]">
-                                    <img src="${card.image}" alt="${card.name_tw}" class="w-48 md:w-full object-cover aspect-[1/1.7] ${imgRotationClass} opacity-80 hover:opacity-100 transition-opacity mix-blend-screen" style="filter: sepia(0.2) hue-rotate(90deg) saturate(150%);">
+                                <div class="mt-8 mb-4 border-2 border-[#00ff41]/50 p-1 rounded-sm bg-black overflow-hidden shadow-[0_0_15px_rgba(0,255,65,0.2)]">
+                                    <img src="${card.image}" alt="${card.name_tw}" class="w-full object-cover aspect-[1/1.7] ${imgRotationClass} hologram-filter">
                                 </div>
                                 
                                 <h3 class="text-3xl font-bold tracking-widest mt-2 mb-1 ${textGlowClass}">${card.name_tw}</h3>
