@@ -9,30 +9,30 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 擴充至完整的 22 張大阿爾克那，並加入真實的塔羅牌圖片 URL
+// 使用更穩定的維基百科圖片原始路徑 (避免 wiki 阻擋 hotlinking 或網址變更)
 const TAROT_DB = [
-  { id: "AR00", name_tw: "愚者", keywords: { upright: "無限可能、冒險、新開始", reversed: "魯莽、逃避責任" }, image: "https://upload.wikimedia.org/wikipedia/en/9/90/RWS_Tarot_00_Fool.jpg" },
-  { id: "AR01", name_tw: "魔術師", keywords: { upright: "創造力、主動、新計畫", reversed: "欺騙、猶豫不決" }, image: "https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg" },
-  { id: "AR02", name_tw: "女祭司", keywords: { upright: "直覺、潛意識、神祕", reversed: "忽視直覺、表面" }, image: "https://upload.wikimedia.org/wikipedia/en/8/88/RWS_Tarot_02_High_Priestess.jpg" },
-  { id: "AR03", name_tw: "皇后", keywords: { upright: "豐收、孕育、母性", reversed: "過度保護、鋪張" }, image: "https://upload.wikimedia.org/wikipedia/en/d/d2/RWS_Tarot_03_Empress.jpg" },
-  { id: "AR04", name_tw: "皇帝", keywords: { upright: "權威、結構、穩定", reversed: "獨裁、缺乏控制" }, image: "https://upload.wikimedia.org/wikipedia/en/c/c3/RWS_Tarot_04_Emperor.jpg" },
-  { id: "AR05", name_tw: "教皇", keywords: { upright: "信仰、傳統、精神指引", reversed: "盲從、打破常規" }, image: "https://upload.wikimedia.org/wikipedia/en/8/8d/RWS_Tarot_05_Hierophant.jpg" },
-  { id: "AR06", name_tw: "戀人", keywords: { upright: "愛、和諧、選擇", reversed: "失衡、錯誤的選擇" }, image: "https://upload.wikimedia.org/wikipedia/en/d/db/RWS_Tarot_06_Lovers.jpg" },
-  { id: "AR07", name_tw: "戰車", keywords: { upright: "意志力、勝利、控制", reversed: "失控、阻礙" }, image: "https://upload.wikimedia.org/wikipedia/en/9/9b/RWS_Tarot_07_Chariot.jpg" },
-  { id: "AR08", name_tw: "力量", keywords: { upright: "內在力量、勇氣、耐心", reversed: "懷疑、軟弱" }, image: "https://upload.wikimedia.org/wikipedia/en/f/f5/RWS_Tarot_08_Strength.jpg" },
-  { id: "AR09", name_tw: "隱者", keywords: { upright: "自省、孤獨、尋求真理", reversed: "孤立、迷失" }, image: "https://upload.wikimedia.org/wikipedia/en/4/4d/RWS_Tarot_09_Hermit.jpg" },
-  { id: "AR10", name_tw: "命運之輪", keywords: { upright: "轉機、命運、不可抗力", reversed: "厄運、抗拒改變" }, image: "https://upload.wikimedia.org/wikipedia/en/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg" },
-  { id: "AR11", name_tw: "正義", keywords: { upright: "公平、平衡、因果", reversed: "不公、偏見" }, image: "https://upload.wikimedia.org/wikipedia/en/e/e0/RWS_Tarot_11_Justice.jpg" },
-  { id: "AR12", name_tw: "倒吊人", keywords: { upright: "犧牲、新視角、等待", reversed: "無謂的犧牲、停滯" }, image: "https://upload.wikimedia.org/wikipedia/en/2/2b/RWS_Tarot_12_Hanged_Man.jpg" },
-  { id: "AR13", name_tw: "死神", keywords: { upright: "結束、轉變、除舊佈新", reversed: "停滯、恐懼改變" }, image: "https://upload.wikimedia.org/wikipedia/en/d/d7/RWS_Tarot_13_Death.jpg" },
-  { id: "AR14", name_tw: "節制", keywords: { upright: "平衡、調和、耐心", reversed: "失衡、極端" }, image: "https://upload.wikimedia.org/wikipedia/en/f/f8/RWS_Tarot_14_Temperance.jpg" },
-  { id: "AR15", name_tw: "惡魔", keywords: { upright: "誘惑、束縛、物質主義", reversed: "解脫、重獲自由" }, image: "https://upload.wikimedia.org/wikipedia/en/5/55/RWS_Tarot_15_Devil.jpg" },
-  { id: "AR16", name_tw: "高塔", keywords: { upright: "巨變、破壞、意外", reversed: "懸崖勒馬、避免災難" }, image: "https://upload.wikimedia.org/wikipedia/en/5/53/RWS_Tarot_16_Tower.jpg" },
-  { id: "AR17", name_tw: "星星", keywords: { upright: "希望、靈感、平靜", reversed: "絕望、灰心" }, image: "https://upload.wikimedia.org/wikipedia/en/d/db/RWS_Tarot_17_Star.jpg" },
-  { id: "AR18", name_tw: "月亮", keywords: { upright: "直覺、潛意識、不安", reversed: "克服恐懼、揭露真相" }, image: "https://upload.wikimedia.org/wikipedia/en/7/7f/RWS_Tarot_18_Moon.jpg" },
-  { id: "AR19", name_tw: "太陽", keywords: { upright: "成功、活力、真相", reversed: "悲觀、暫時的阻礙" }, image: "https://upload.wikimedia.org/wikipedia/en/1/17/RWS_Tarot_19_Sun.jpg" },
-  { id: "AR20", name_tw: "審判", keywords: { upright: "重生、覺醒、決斷", reversed: "猶豫、自我懷疑" }, image: "https://upload.wikimedia.org/wikipedia/en/d/dd/RWS_Tarot_20_Judgement.jpg" },
-  { id: "AR21", name_tw: "世界", keywords: { upright: "完成、圓滿、成就", reversed: "未完成、延遲" }, image: "https://upload.wikimedia.org/wikipedia/en/f/ff/RWS_Tarot_21_World.jpg" }
+  { id: "AR00", name_tw: "愚者", keywords: { upright: "無限可能、冒險、新開始", reversed: "魯莽、逃避責任" }, image: "https://upload.wikimedia.org/wikipedia/commons/9/90/RWS_Tarot_00_Fool.jpg" },
+  { id: "AR01", name_tw: "魔術師", keywords: { upright: "創造力、主動、新計畫", reversed: "欺騙、猶豫不決" }, image: "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg" },
+  { id: "AR02", name_tw: "女祭司", keywords: { upright: "直覺、潛意識、神祕", reversed: "忽視直覺、表面" }, image: "https://upload.wikimedia.org/wikipedia/commons/8/88/RWS_Tarot_02_High_Priestess.jpg" },
+  { id: "AR03", name_tw: "皇后", keywords: { upright: "豐收、孕育、母性", reversed: "過度保護、鋪張" }, image: "https://upload.wikimedia.org/wikipedia/commons/d/d2/RWS_Tarot_03_Empress.jpg" },
+  { id: "AR04", name_tw: "皇帝", keywords: { upright: "權威、結構、穩定", reversed: "獨裁、缺乏控制" }, image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/RWS_Tarot_04_Emperor.jpg" },
+  { id: "AR05", name_tw: "教皇", keywords: { upright: "信仰、傳統、精神指引", reversed: "盲從、打破常規" }, image: "https://upload.wikimedia.org/wikipedia/commons/8/8d/RWS_Tarot_05_Hierophant.jpg" },
+  { id: "AR06", name_tw: "戀人", keywords: { upright: "愛、和諧、選擇", reversed: "失衡、錯誤的選擇" }, image: "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_06_Lovers.jpg" },
+  { id: "AR07", name_tw: "戰車", keywords: { upright: "意志力、勝利、控制", reversed: "失控、阻礙" }, image: "https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg" },
+  { id: "AR08", name_tw: "力量", keywords: { upright: "內在力量、勇氣、耐心", reversed: "懷疑、軟弱" }, image: "https://upload.wikimedia.org/wikipedia/commons/f/f5/RWS_Tarot_08_Strength.jpg" },
+  { id: "AR09", name_tw: "隱者", keywords: { upright: "自省、孤獨、尋求真理", reversed: "孤立、迷失" }, image: "https://upload.wikimedia.org/wikipedia/commons/4/4d/RWS_Tarot_09_Hermit.jpg" },
+  { id: "AR10", name_tw: "命運之輪", keywords: { upright: "轉機、命運、不可抗力", reversed: "厄運、抗拒改變" }, image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg" },
+  { id: "AR11", name_tw: "正義", keywords: { upright: "公平、平衡、因果", reversed: "不公、偏見" }, image: "https://upload.wikimedia.org/wikipedia/commons/e/e0/RWS_Tarot_11_Justice.jpg" },
+  { id: "AR12", name_tw: "倒吊人", keywords: { upright: "犧牲、新視角、等待", reversed: "無謂的犧牲、停滯" }, image: "https://upload.wikimedia.org/wikipedia/commons/2/2b/RWS_Tarot_12_Hanged_Man.jpg" },
+  { id: "AR13", name_tw: "死神", keywords: { upright: "結束、轉變、除舊佈新", reversed: "停滯、恐懼改變" }, image: "https://upload.wikimedia.org/wikipedia/commons/d/d7/RWS_Tarot_13_Death.jpg" },
+  { id: "AR14", name_tw: "節制", keywords: { upright: "平衡、調和、耐心", reversed: "失衡、極端" }, image: "https://upload.wikimedia.org/wikipedia/commons/f/f8/RWS_Tarot_14_Temperance.jpg" },
+  { id: "AR15", name_tw: "惡魔", keywords: { upright: "誘惑、束縛、物質主義", reversed: "解脫、重獲自由" }, image: "https://upload.wikimedia.org/wikipedia/commons/5/55/RWS_Tarot_15_Devil.jpg" },
+  { id: "AR16", name_tw: "高塔", keywords: { upright: "巨變、破壞、意外", reversed: "懸崖勒馬、避免災難" }, image: "https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg" },
+  { id: "AR17", name_tw: "星星", keywords: { upright: "希望、靈感、平靜", reversed: "絕望、灰心" }, image: "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_17_Star.jpg" },
+  { id: "AR18", name_tw: "月亮", keywords: { upright: "直覺、潛意識、不安", reversed: "克服恐懼、揭露真相" }, image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/RWS_Tarot_18_Moon.jpg" },
+  { id: "AR19", name_tw: "太陽", keywords: { upright: "成功、活力、真相", reversed: "悲觀、暫時的阻礙" }, image: "https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg" },
+  { id: "AR20", name_tw: "審判", keywords: { upright: "重生、覺醒、決斷", reversed: "猶豫、自我懷疑" }, image: "https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg" },
+  { id: "AR21", name_tw: "世界", keywords: { upright: "完成、圓滿、成就", reversed: "未完成、延遲" }, image: "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg" }
 ];
 
 function drawCards(count) {
@@ -44,7 +44,7 @@ function drawCards(count) {
     const isReversed = Math.random() > 0.5;
     drawn.push({
       ...card,
-      isReversed: isReversed, // added to pass boolean state to frontend for rotation
+      isReversed: isReversed,
       direction: isReversed ? "逆位" : "正位",
       currentKeywords: isReversed ? card.keywords.reversed : card.keywords.upright
     });
