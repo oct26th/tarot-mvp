@@ -53,6 +53,14 @@ app.post('/api/draw', async (req, res) => {
     }
 
     const data = await response.json();
+    
+    // Debug logic: try to extract text from Anthropic format, fallback to JSON
+    let interpretationText = '';
+    if (data && data.content && Array.isArray(data.content) && data.content[0] && data.content[0].text) {
+        interpretationText = data.content[0].text;
+    } else {
+        interpretationText = JSON.stringify(data);
+    }
 
     res.json({
       success: true,
@@ -61,7 +69,7 @@ app.post('/api/draw', async (req, res) => {
         direction,
         keywords
       },
-      interpretation: data.choices ? data.choices[0].message.content : (data.content ? data.content[0].text : JSON.stringify(data))
+      interpretation: interpretationText
     });
   } catch (error) {
     console.error(error);
