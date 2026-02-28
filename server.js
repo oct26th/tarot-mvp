@@ -32,7 +32,513 @@ const TAROT_DB = [
   { id: "AR18", name_tw: "月亮", keywords: { upright: "直覺、潛意識、不安", reversed: "克服恐懼、揭露真相" }, image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/RWS_Tarot_18_Moon.jpg" },
   { id: "AR19", name_tw: "太陽", keywords: { upright: "成功、活力、真相", reversed: "悲觀、暫時的阻礙" }, image: "https://upload.wikimedia.org/wikipedia/commons/1/17/RWS_Tarot_19_Sun.jpg" },
   { id: "AR20", name_tw: "審判", keywords: { upright: "重生、覺醒、決斷", reversed: "猶豫、自我懷疑" }, image: "https://upload.wikimedia.org/wikipedia/commons/d/dd/RWS_Tarot_20_Judgement.jpg" },
-  { id: "AR21", name_tw: "世界", keywords: { upright: "完成、圓滿、成就", reversed: "未完成、延遲" }, image: "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg" }
+  { id: "AR21", name_tw: "世界", keywords: { upright: "完成、圓滿、成就", reversed: "未完成、延遲" }, image: "https://upload.wikimedia.org/wikipedia/commons/f/ff/RWS_Tarot_21_World.jpg" },
+
+  {
+    "id": "Wands01",
+    "name_tw": "權杖一",
+    "keywords": {
+      "upright": "創造力、靈感、新起點",
+      "reversed": "延遲、缺乏動力"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/1/11/Wands01.jpg"
+  },
+  {
+    "id": "Wands02",
+    "name_tw": "權杖二",
+    "keywords": {
+      "upright": "計畫、未來展望、決定",
+      "reversed": "猶豫不決、恐懼未知"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Wands02.jpg"
+  },
+  {
+    "id": "Wands03",
+    "name_tw": "權杖三",
+    "keywords": {
+      "upright": "擴展、遠見、海外機會",
+      "reversed": "計畫受阻、缺乏遠見"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Wands03.jpg"
+  },
+  {
+    "id": "Wands04",
+    "name_tw": "權杖四",
+    "keywords": {
+      "upright": "慶祝、和諧、穩定",
+      "reversed": "短暫的快樂、缺乏安全感"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Wands04.jpg"
+  },
+  {
+    "id": "Wands05",
+    "name_tw": "權杖五",
+    "keywords": {
+      "upright": "競爭、衝突、小麻煩",
+      "reversed": "避免衝突、和解"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Wands05.jpg"
+  },
+  {
+    "id": "Wands06",
+    "name_tw": "權杖六",
+    "keywords": {
+      "upright": "勝利、認可、自信",
+      "reversed": "自我懷疑、名譽受損"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Wands06.jpg"
+  },
+  {
+    "id": "Wands07",
+    "name_tw": "權杖七",
+    "keywords": {
+      "upright": "防禦、堅持、挑戰",
+      "reversed": "放棄、妥協、不知所措"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Wands07.jpg"
+  },
+  {
+    "id": "Wands08",
+    "name_tw": "權杖八",
+    "keywords": {
+      "upright": "快速行動、進展、旅行",
+      "reversed": "延誤、衝動、計畫受阻"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Wands08.jpg"
+  },
+  {
+    "id": "Wands09",
+    "name_tw": "權杖九",
+    "keywords": {
+      "upright": "韌性、防備、最後的考驗",
+      "reversed": "疲憊、放棄、防禦過度"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/e/e7/Wands09.jpg"
+  },
+  {
+    "id": "Wands10",
+    "name_tw": "權杖十",
+    "keywords": {
+      "upright": "重擔、壓力、責任",
+      "reversed": "釋放壓力、推卸責任"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Wands10.jpg"
+  },
+  {
+    "id": "Wands11",
+    "name_tw": "權杖侍者",
+    "keywords": {
+      "upright": "熱情、新想法、探索",
+      "reversed": "三分鐘熱度、缺乏行動"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Wands11.jpg"
+  },
+  {
+    "id": "Wands12",
+    "name_tw": "權杖騎士",
+    "keywords": {
+      "upright": "行動力、冒險、衝動",
+      "reversed": "魯莽、不負責任、急躁"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/1/16/Wands12.jpg"
+  },
+  {
+    "id": "Wands13",
+    "name_tw": "權杖王后",
+    "keywords": {
+      "upright": "魅力、自信、獨立",
+      "reversed": "固執、嫉妒、缺乏自信"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Wands13.jpg"
+  },
+  {
+    "id": "Wands14",
+    "name_tw": "權杖國王",
+    "keywords": {
+      "upright": "領導力、遠見、榮譽",
+      "reversed": "專制、傲慢、缺乏包容"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Wands14.jpg"
+  },
+  {
+    "id": "Cups01",
+    "name_tw": "聖杯一",
+    "keywords": {
+      "upright": "愛、新感情、直覺",
+      "reversed": "情感枯竭、壓抑"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/36/Cups01.jpg"
+  },
+  {
+    "id": "Cups02",
+    "name_tw": "聖杯二",
+    "keywords": {
+      "upright": "合作、伴侶關係、吸引力",
+      "reversed": "關係破裂、不平衡"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Cups02.jpg"
+  },
+  {
+    "id": "Cups03",
+    "name_tw": "聖杯三",
+    "keywords": {
+      "upright": "慶祝、友誼、社交",
+      "reversed": "孤立、過度放縱"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Cups03.jpg"
+  },
+  {
+    "id": "Cups04",
+    "name_tw": "聖杯四",
+    "keywords": {
+      "upright": "冷漠、沉思、錯失良機",
+      "reversed": "重新振作、把握機會"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/35/Cups04.jpg"
+  },
+  {
+    "id": "Cups05",
+    "name_tw": "聖杯五",
+    "keywords": {
+      "upright": "失落、悲傷、沉溺過去",
+      "reversed": "走出悲傷、接受現實"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Cups05.jpg"
+  },
+  {
+    "id": "Cups06",
+    "name_tw": "聖杯六",
+    "keywords": {
+      "upright": "懷舊、童年、純真",
+      "reversed": "沉溺過去、不切實際"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/1/17/Cups06.jpg"
+  },
+  {
+    "id": "Cups07",
+    "name_tw": "聖杯七",
+    "keywords": {
+      "upright": "選擇、幻想、白日夢",
+      "reversed": "面對現實、看清真相"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Cups07.jpg"
+  },
+  {
+    "id": "Cups08",
+    "name_tw": "聖杯八",
+    "keywords": {
+      "upright": "離開、尋求更高意義",
+      "reversed": "害怕改變、逃避問題"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/60/Cups08.jpg"
+  },
+  {
+    "id": "Cups09",
+    "name_tw": "聖杯九",
+    "keywords": {
+      "upright": "滿足、願望達成、享受",
+      "reversed": "貪婪、不滿、炫耀"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/24/Cups09.jpg"
+  },
+  {
+    "id": "Cups10",
+    "name_tw": "聖杯十",
+    "keywords": {
+      "upright": "和諧、家庭、幸福",
+      "reversed": "家庭不和、關係破裂"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/8/84/Cups10.jpg"
+  },
+  {
+    "id": "Cups11",
+    "name_tw": "聖杯侍者",
+    "keywords": {
+      "upright": "創意、直覺、浪漫",
+      "reversed": "情緒化、不成熟"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Cups11.jpg"
+  },
+  {
+    "id": "Cups12",
+    "name_tw": "聖杯騎士",
+    "keywords": {
+      "upright": "浪漫、迷人、理想主義",
+      "reversed": "嫉妒、不忠、不切實際"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/8/85/Cups12.jpg"
+  },
+  {
+    "id": "Cups13",
+    "name_tw": "聖杯王后",
+    "keywords": {
+      "upright": "同理心、溫柔、直覺",
+      "reversed": "過度情緒化、依賴"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Cups13.jpg"
+  },
+  {
+    "id": "Cups14",
+    "name_tw": "聖杯國王",
+    "keywords": {
+      "upright": "情緒穩定、成熟、外交",
+      "reversed": "情緒操縱、冷酷"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/04/Cups14.jpg"
+  },
+  {
+    "id": "Swords01",
+    "name_tw": "寶劍一",
+    "keywords": {
+      "upright": "突破、清晰、新思維",
+      "reversed": "混亂、思緒不清"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Swords01.jpg"
+  },
+  {
+    "id": "Swords02",
+    "name_tw": "寶劍二",
+    "keywords": {
+      "upright": "僵局、逃避、平衡",
+      "reversed": "做出決定、資訊過載"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Swords02.jpg"
+  },
+  {
+    "id": "Swords03",
+    "name_tw": "寶劍三",
+    "keywords": {
+      "upright": "心碎、悲痛、分離",
+      "reversed": "釋放痛苦、原諒"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/02/Swords03.jpg"
+  },
+  {
+    "id": "Swords04",
+    "name_tw": "寶劍四",
+    "keywords": {
+      "upright": "休息、恢復、冥想",
+      "reversed": "精疲力竭、重新活動"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Swords04.jpg"
+  },
+  {
+    "id": "Swords05",
+    "name_tw": "寶劍五",
+    "keywords": {
+      "upright": "衝突、不擇手段、失敗",
+      "reversed": "和解、放下執念"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/23/Swords05.jpg"
+  },
+  {
+    "id": "Swords06",
+    "name_tw": "寶劍六",
+    "keywords": {
+      "upright": "過渡、平靜、療癒",
+      "reversed": "抗拒改變、舊病復發"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/29/Swords06.jpg"
+  },
+  {
+    "id": "Swords07",
+    "name_tw": "寶劍七",
+    "keywords": {
+      "upright": "策略、欺騙、逃避",
+      "reversed": "真相大白、承認錯誤"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/34/Swords07.jpg"
+  },
+  {
+    "id": "Swords08",
+    "name_tw": "寶劍八",
+    "keywords": {
+      "upright": "束縛、限制、無力感",
+      "reversed": "解脫、重獲自由、新視角"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Swords08.jpg"
+  },
+  {
+    "id": "Swords09",
+    "name_tw": "寶劍九",
+    "keywords": {
+      "upright": "焦慮、噩夢、擔憂",
+      "reversed": "恐懼減輕、尋求幫助"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Swords09.jpg"
+  },
+  {
+    "id": "Swords10",
+    "name_tw": "寶劍十",
+    "keywords": {
+      "upright": "毀滅、背叛、谷底",
+      "reversed": "否極泰來、重新開始"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords10.jpg"
+  },
+  {
+    "id": "Swords11",
+    "name_tw": "寶劍侍者",
+    "keywords": {
+      "upright": "好奇心、警覺、直言",
+      "reversed": "多嘴、急躁、缺乏思考"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Swords11.jpg"
+  },
+  {
+    "id": "Swords12",
+    "name_tw": "寶劍騎士",
+    "keywords": {
+      "upright": "果斷、野心、行動",
+      "reversed": "衝動、無情、魯莽"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Swords12.jpg"
+  },
+  {
+    "id": "Swords13",
+    "name_tw": "寶劍王后",
+    "keywords": {
+      "upright": "獨立、清晰、客觀",
+      "reversed": "冷酷、刻薄、過於批判"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Swords13.jpg"
+  },
+  {
+    "id": "Swords14",
+    "name_tw": "寶劍國王",
+    "keywords": {
+      "upright": "理智、權威、公正",
+      "reversed": "濫用權力、操縱、冷酷"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/33/Swords14.jpg"
+  },
+  {
+    "id": "Pents01",
+    "name_tw": "星幣一",
+    "keywords": {
+      "upright": "新機會、財富、顯化",
+      "reversed": "錯失機會、財務規劃不佳"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pents01.jpg"
+  },
+  {
+    "id": "Pents02",
+    "name_tw": "星幣二",
+    "keywords": {
+      "upright": "平衡、適應、優先級",
+      "reversed": "失衡、財務混亂"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Pents02.jpg"
+  },
+  {
+    "id": "Pents03",
+    "name_tw": "星幣三",
+    "keywords": {
+      "upright": "團隊合作、技能、學習",
+      "reversed": "缺乏合作、忽視細節"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents03.jpg"
+  },
+  {
+    "id": "Pents04",
+    "name_tw": "星幣四",
+    "keywords": {
+      "upright": "儲蓄、穩定、保守",
+      "reversed": "貪婪、過度控制"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/35/Pents04.jpg"
+  },
+  {
+    "id": "Pents05",
+    "name_tw": "星幣五",
+    "keywords": {
+      "upright": "貧困、孤立、艱難",
+      "reversed": "財務復甦、尋求援助"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/9/96/Pents05.jpg"
+  },
+  {
+    "id": "Pents06",
+    "name_tw": "星幣六",
+    "keywords": {
+      "upright": "慷慨、分享、慈善",
+      "reversed": "自私、不平等的施捨"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Pents06.jpg"
+  },
+  {
+    "id": "Pents07",
+    "name_tw": "星幣七",
+    "keywords": {
+      "upright": "耐心、投資、評估",
+      "reversed": "缺乏回報、投資失敗"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Pents07.jpg"
+  },
+  {
+    "id": "Pents08",
+    "name_tw": "星幣八",
+    "keywords": {
+      "upright": "專注、技能、勤奮",
+      "reversed": "完美主義、缺乏動力"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/4/49/Pents08.jpg"
+  },
+  {
+    "id": "Pents09",
+    "name_tw": "星幣九",
+    "keywords": {
+      "upright": "豐收、獨立、奢華",
+      "reversed": "過度消費、依賴"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/f/f0/Pents09.jpg"
+  },
+  {
+    "id": "Pents10",
+    "name_tw": "星幣十",
+    "keywords": {
+      "upright": "財富、家庭、長期穩定",
+      "reversed": "財務糾紛、家庭破裂"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/4/42/Pents10.jpg"
+  },
+  {
+    "id": "Pents11",
+    "name_tw": "星幣侍者",
+    "keywords": {
+      "upright": "機會、學習、務實",
+      "reversed": "錯失良機、缺乏常識"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Pents11.jpg"
+  },
+  {
+    "id": "Pents12",
+    "name_tw": "星幣騎士",
+    "keywords": {
+      "upright": "責任、可靠、勤勞",
+      "reversed": "固執、懶惰、無趣"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Pents12.jpg"
+  },
+  {
+    "id": "Pents13",
+    "name_tw": "星幣王后",
+    "keywords": {
+      "upright": "母性、務實、豐盛",
+      "reversed": "拜金、忽視家庭"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/8/88/Pents13.jpg"
+  },
+  {
+    "id": "Pents14",
+    "name_tw": "星幣國王",
+    "keywords": {
+      "upright": "財富、事業、成功",
+      "reversed": "貪婪、冷酷無情"
+    },
+    "image": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Pents14.jpg"
+  }
+
 ];
 
 function drawCards(count) {
