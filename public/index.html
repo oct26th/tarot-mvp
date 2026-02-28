@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAROT_OS // 仿生人神諭終端 v2</title>
+    <title>TAROT_OS // 仿生人神諭終端 v2.1</title>
     <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -15,7 +15,6 @@
         @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
         .card-glitch:hover { box-shadow: 0 0 15px rgba(0, 255, 65, 0.5); text-shadow: 0 0 5px #00ff41; background-color: rgba(0, 255, 65, 0.1); }
         .loading { display: none; }
-        /* Style for markdown bold parsing */
         strong, b { color: #fff; text-shadow: 0 0 5px #00ff41; font-weight: 700; }
     </style>
 </head>
@@ -23,7 +22,7 @@
 
     <header class="border-b-2 border-[#00ff41] pb-2 mb-8 flex justify-between items-end">
         <div>
-            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v2.0.0</span></h1>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v2.1.0</span></h1>
             <p class="text-xs mt-1 opacity-70">CONNECTION: SECURE // PROTOCOL: GHOST_IN_THE_SHELL</p>
         </div>
         <div class="text-right text-xs hidden md:block">
@@ -56,7 +55,6 @@
         <div id="result-box" class="border border-[#00ff41] bg-[#00ff41]/5 p-4 md:p-6 relative hidden">
             <div class="absolute -top-3 left-4 bg-[#050505] px-2 text-xs">INCOMING_TRANSMISSION</div>
             
-            <!-- 動態生成的卡牌區塊 -->
             <div id="cards-container" class="grid gap-4 mb-8 pb-6 border-b border-[#00ff41]/30">
                 <!-- Cards will be injected here -->
             </div>
@@ -76,7 +74,6 @@
     </div>
 
     <script>
-        // Simple markdown bold parser
         function parseMarkdown(text) {
             return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         }
@@ -104,12 +101,11 @@
                     const container = document.getElementById('cards-container');
                     container.innerHTML = '';
                     
-                    // Set grid columns based on spread type
-                    if (spreadType === 'single') container.className = 'grid grid-cols-1 md:grid-cols-1 max-w-sm mx-auto gap-4 mb-8 pb-6 border-b border-[#00ff41]/30';
-                    if (spreadType === 'time_flow') container.className = 'grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 pb-6 border-b border-[#00ff41]/30';
-                    if (spreadType === 'choice') container.className = 'grid grid-cols-1 md:grid-cols-5 gap-2 mb-8 pb-6 border-b border-[#00ff41]/30';
+                    // Fixed: Adjust grid columns for mobile vs desktop so cards aren't stretched too thin
+                    if (spreadType === 'single') container.className = 'grid grid-cols-1 max-w-md mx-auto gap-6 mb-8 pb-6 border-b border-[#00ff41]/30';
+                    if (spreadType === 'time_flow') container.className = 'grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pb-6 border-b border-[#00ff41]/30';
+                    if (spreadType === 'choice') container.className = 'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8 pb-6 border-b border-[#00ff41]/30';
 
-                    // Labels for different spreads
                     const getLabel = (spread, index) => {
                         if(spread === 'single') return '神諭';
                         if(spread === 'time_flow') return ['過去', '現在', '未來'][index];
@@ -117,12 +113,13 @@
                     };
 
                     data.cards.forEach((card, index) => {
+                        // Increased icon size (text-6xl -> text-8xl) and font sizes for the card block
                         const cardHtml = `
-                            <div class="card-glitch relative border border-[#00ff41] p-4 text-center transition-all">
-                                <div class="absolute top-1 left-2 text-[10px] opacity-60">[ ${getLabel(spreadType, index)} ]</div>
-                                <div class="text-4xl mt-3 mb-2">🃏</div>
-                                <h3 class="text-xl font-bold tracking-widest">${card.name_tw}</h3>
-                                <p class="text-sm opacity-80 mt-1">${card.direction}</p>
+                            <div class="card-glitch relative border-2 border-[#00ff41] p-6 text-center transition-all bg-black/40">
+                                <div class="absolute top-2 left-3 text-xs opacity-70 border-b border-[#00ff41]/50 pb-1">[ ${getLabel(spreadType, index)} ]</div>
+                                <div class="text-7xl md:text-8xl mt-8 mb-6 drop-shadow-[0_0_15px_rgba(0,255,65,0.8)]">🃏</div>
+                                <h3 class="text-2xl md:text-3xl font-bold tracking-widest text-shadow-glow mb-2">${card.name_tw}</h3>
+                                <p class="text-lg opacity-90">${card.direction}</p>
                             </div>
                         `;
                         container.innerHTML += cardHtml;
@@ -137,7 +134,6 @@
                     resultBox.classList.remove('hidden');
                     resultBox.classList.add('block');
                     
-                    // Scroll to result
                     resultBox.scrollIntoView({ behavior: 'smooth' });
                 } else {
                     alert('SYSTEM_ERROR: ' + data.error);
