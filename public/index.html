@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAROT_OS // 仿生人神諭終端 v2.1</title>
+    <title>TAROT_OS // 仿生人神諭終端 v3.0</title>
     <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -16,13 +16,14 @@
         .card-glitch:hover { box-shadow: 0 0 15px rgba(0, 255, 65, 0.5); text-shadow: 0 0 5px #00ff41; background-color: rgba(0, 255, 65, 0.1); }
         .loading { display: none; }
         strong, b { color: #fff; text-shadow: 0 0 5px #00ff41; font-weight: 700; }
+        .reversed-card { transform: rotate(180deg); }
     </style>
 </head>
 <body class="min-h-screen w-screen overflow-x-hidden overflow-y-auto flex flex-col p-4 md:p-8 selection:bg-green-900 selection:text-green-100">
 
     <header class="border-b-2 border-[#00ff41] pb-2 mb-8 flex justify-between items-end">
         <div>
-            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v2.3.0</span></h1>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v3.0.0</span></h1>
             <p class="text-xs mt-1 opacity-70">CONNECTION: SECURE // PROTOCOL: GHOST_IN_THE_SHELL</p>
         </div>
         <div class="text-right text-xs hidden md:block">
@@ -101,10 +102,9 @@
                     const container = document.getElementById('cards-container');
                     container.innerHTML = '';
                     
-                    // Fixed: Adjust grid columns for mobile vs desktop so cards aren't stretched too thin
-                    if (spreadType === 'single') container.className = 'grid grid-cols-1 max-w-md mx-auto gap-6 mb-8 pb-6 border-b border-[#00ff41]/30';
-                    if (spreadType === 'time_flow') container.className = 'grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 pb-6 border-b border-[#00ff41]/30';
-                    if (spreadType === 'choice') container.className = 'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8 pb-6 border-b border-[#00ff41]/30';
+                    if (spreadType === 'single') container.className = 'grid grid-cols-1 max-w-sm mx-auto gap-8 mb-10 pb-6 border-b border-[#00ff41]/30';
+                    if (spreadType === 'time_flow') container.className = 'grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 pb-6 border-b border-[#00ff41]/30';
+                    if (spreadType === 'choice') container.className = 'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-10 pb-6 border-b border-[#00ff41]/30';
 
                     const getLabel = (spread, index) => {
                         if(spread === 'single') return '神諭';
@@ -113,13 +113,19 @@
                     };
 
                     data.cards.forEach((card, index) => {
-                        // Massive card size for mobile
+                        const imgRotationClass = card.isReversed ? 'reversed-card' : '';
+                        const textGlowClass = card.isReversed ? 'text-red-500 drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]' : 'text-[#00ff41] drop-shadow-[0_0_10px_rgba(0,255,65,0.8)]';
+
                         const cardHtml = `
-                            <div class="card-glitch relative border-2 border-[#00ff41] p-10 md:p-14 text-center transition-all bg-black/40 min-h-[350px] flex flex-col items-center justify-center">
-                                <div class="absolute top-4 left-4 text-sm font-bold opacity-80 border-b border-[#00ff41]/50 pb-1 tracking-wider">[ ${getLabel(spreadType, index)} ]</div>
-                                <div class="text-[8rem] md:text-[10rem] mt-6 mb-4 drop-shadow-[0_0_25px_rgba(0,255,65,0.9)]">🃏</div>
-                                <h3 class="text-4xl md:text-5xl font-bold tracking-widest text-shadow-glow mb-3">${card.name_tw}</h3>
-                                <p class="text-2xl opacity-90 font-bold tracking-wider text-[#00ff41]">${card.direction}</p>
+                            <div class="card-glitch relative border border-[#00ff41] p-6 pb-4 text-center transition-all bg-black/40 flex flex-col items-center">
+                                <div class="absolute top-0 left-0 bg-[#00ff41] text-black px-2 py-1 text-xs font-bold w-full text-left tracking-widest">[ ${getLabel(spreadType, index)} ]</div>
+                                
+                                <div class="mt-8 mb-4 border-2 border-[#00ff41] p-1 rounded-sm bg-black overflow-hidden shadow-[0_0_15px_rgba(0,255,65,0.3)]">
+                                    <img src="${card.image}" alt="${card.name_tw}" class="w-48 md:w-full object-cover aspect-[1/1.7] ${imgRotationClass} opacity-80 hover:opacity-100 transition-opacity mix-blend-screen" style="filter: sepia(0.2) hue-rotate(90deg) saturate(150%);">
+                                </div>
+                                
+                                <h3 class="text-3xl font-bold tracking-widest mt-2 mb-1 ${textGlowClass}">${card.name_tw}</h3>
+                                <p class="text-lg font-bold tracking-wider ${card.isReversed ? 'text-red-400' : 'text-[#00ff41]'} opacity-90">${card.direction}</p>
                             </div>
                         `;
                         container.innerHTML += cardHtml;
