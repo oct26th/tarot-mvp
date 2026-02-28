@@ -12,9 +12,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Configure OpenAI SDK to use OpenRouter (which supports MiniMax) or direct MiniMax
 // Using OpenRouter for minimax/minimax-2.5 or direct depending on the key
 const openai = new OpenAI({
-  baseURL: 'https://api.minimax.chat/v1',
+  baseURL: 'https://api.minimax.io/v1',
   apiKey: process.env.API_KEY || 'dummy_key',
-  // if using direct minimax: baseURL: 'https://api.minimax.chat/v1'
+  // if using direct minimax: baseURL: 'https://api.minimax.io/v1'
 });
 
 const TAROT_DB = [
