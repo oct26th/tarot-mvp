@@ -18,19 +18,19 @@
         strong, b { color: #fff; text-shadow: 0 0 5px #00ff41; font-weight: 700; }
         .reversed-card { transform: rotate(180deg); }
         
-        /* Revised Cyberpunk Hologram Filter */
+        /* Natural Cards with subtle terminal glow */
         .hologram-filter {
-            /* 降低飽和度，保留更多灰階細節，將色相旋轉調成偏向幽綠而非青綠，並透過 opacity 讓底色透出 */
-            filter: grayscale(80%) sepia(50%) hue-rotate(85deg) contrast(1.2) brightness(0.9);
-            mix-blend-mode: hard-light;
-            opacity: 0.85;
+            /* 移除所有的顏色破壞濾鏡，只保留微弱的對比度和亮度調整，以及邊緣發光 */
+            filter: contrast(1.1) brightness(0.95);
+            opacity: 0.95;
             transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.15);
+            border-radius: 4px;
         }
         .hologram-filter:hover {
             opacity: 1;
-            filter: grayscale(50%) sepia(30%) hue-rotate(85deg) contrast(1.3) brightness(1.1);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+            filter: contrast(1.2) brightness(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.4);
         }
     </style>
 </head>
@@ -38,7 +38,7 @@
 
     <header class="border-b-2 border-[#00ff41] pb-2 mb-8 flex justify-between items-end">
         <div>
-            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v3.2.0</span></h1>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v3.3.0</span></h1>
             <p class="text-xs mt-1 opacity-70">CONNECTION: SECURE // PROTOCOL: GHOST_IN_THE_SHELL</p>
         </div>
         <div class="text-right text-xs hidden md:block">
