@@ -3,60 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAROT_OS // 仿生人神諭終端</title>
+    <title>TAROT_OS // 仿生人神諭終端 v2</title>
     <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        
-        body {
-            font-family: 'Share Tech Mono', monospace;
-            background-color: #050505;
-            color: #00ff41;
-            background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px);
-            background-size: 100% 3px;
-        }
-
-        .cursor::after {
-            content: '█';
-            animation: blink 1s step-start infinite;
-        }
-
+        body { font-family: 'Share Tech Mono', monospace; background-color: #050505; color: #00ff41; background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px); background-size: 100% 3px; }
+        .cursor::after { content: '█'; animation: blink 1s step-start infinite; }
         @keyframes blink { 50% { opacity: 0; } }
-
-        .scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #00ff41;
-            box-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
-            animation: scan 2.5s infinite linear;
-            opacity: 0.7;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            50% { top: 100%; }
-            100% { top: 0; }
-        }
-
-        .card-glitch:hover {
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
-            text-shadow: 0 0 5px #00ff41;
-            background-color: rgba(0, 255, 65, 0.1);
-        }
-        
-        /* Loading animation for decryption */
+        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background-color: #00ff41; box-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41; animation: scan 2.5s infinite linear; opacity: 0.7; }
+        @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
+        .card-glitch:hover { box-shadow: 0 0 15px rgba(0, 255, 65, 0.5); text-shadow: 0 0 5px #00ff41; background-color: rgba(0, 255, 65, 0.1); }
         .loading { display: none; }
+        /* Style for markdown bold parsing */
+        strong, b { color: #fff; text-shadow: 0 0 5px #00ff41; font-weight: 700; }
     </style>
 </head>
-<body class="h-screen w-screen overflow-x-hidden overflow-y-auto flex flex-col p-4 md:p-8 selection:bg-green-900 selection:text-green-100">
+<body class="min-h-screen w-screen overflow-x-hidden overflow-y-auto flex flex-col p-4 md:p-8 selection:bg-green-900 selection:text-green-100">
 
     <header class="border-b-2 border-[#00ff41] pb-2 mb-8 flex justify-between items-end">
         <div>
-            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v1.1.2</span></h1>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-shadow-glow">TAROT_OS <span class="text-sm align-top">v2.0.0</span></h1>
             <p class="text-xs mt-1 opacity-70">CONNECTION: SECURE // PROTOCOL: GHOST_IN_THE_SHELL</p>
         </div>
         <div class="text-right text-xs hidden md:block">
@@ -65,55 +32,62 @@
         </div>
     </header>
 
-    <div class="max-w-2xl mx-auto w-full mb-8">
+    <div class="max-w-4xl mx-auto w-full mb-8">
         <label for="question" class="block text-sm mb-2 opacity-80">輸入查詢參數 (問題):</label>
-        <div class="flex gap-2">
-            <input type="text" id="question" placeholder="例如：我該換工作嗎？" class="flex-grow bg-black border border-[#00ff41] p-2 text-[#00ff41] focus:outline-none focus:bg-[#00ff41]/10">
-            <button onclick="drawCard()" class="border border-[#00ff41] px-4 py-2 hover:bg-[#00ff41] hover:text-black transition-colors font-bold tracking-widest">INITIATE_DRAW</button>
+        <input type="text" id="question" placeholder="例如：我該換工作嗎？未來的發展如何？" class="w-full bg-black border border-[#00ff41] p-3 text-[#00ff41] focus:outline-none focus:bg-[#00ff41]/10 mb-4 text-lg">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button onclick="drawCard('single')" class="border border-[#00ff41] p-3 hover:bg-[#00ff41] hover:text-black transition-all font-bold tracking-widest flex flex-col items-center">
+                <span class="text-xs opacity-80 mb-1">[DRAW: SINGLE]</span>
+                單張神諭
+            </button>
+            <button onclick="drawCard('time_flow')" class="border border-[#00ff41] p-3 hover:bg-[#00ff41] hover:text-black transition-all font-bold tracking-widest flex flex-col items-center">
+                <span class="text-xs opacity-80 mb-1">[DRAW: TIME_FLOW]</span>
+                時間之流 (3張)
+            </button>
+            <button onclick="drawCard('choice')" class="border border-[#00ff41] p-3 hover:bg-[#00ff41] hover:text-black transition-all font-bold tracking-widest flex flex-col items-center">
+                <span class="text-xs opacity-80 mb-1">[DRAW: CHOICE]</span>
+                二選一陣型 (5張)
+            </button>
         </div>
     </div>
 
-    <div class="max-w-2xl mx-auto w-full mb-8">
-        <div id="result-box" class="border border-[#00ff41] bg-[#00ff41]/5 p-4 relative hidden">
+    <div class="max-w-4xl mx-auto w-full mb-8 flex-grow">
+        <div id="result-box" class="border border-[#00ff41] bg-[#00ff41]/5 p-4 md:p-6 relative hidden">
             <div class="absolute -top-3 left-4 bg-[#050505] px-2 text-xs">INCOMING_TRANSMISSION</div>
             
-            <div id="card-info" class="mb-4 pb-4 border-b border-[#00ff41]/30 text-center">
-                <div class="text-5xl mb-2">🃏</div>
-                <h2 id="card-name" class="text-2xl font-bold tracking-widest">---</h2>
-                <p id="card-direction" class="text-sm opacity-80">---</p>
+            <!-- 動態生成的卡牌區塊 -->
+            <div id="cards-container" class="grid gap-4 mb-8 pb-6 border-b border-[#00ff41]/30">
+                <!-- Cards will be injected here -->
             </div>
             
-            <p id="interpretation" class="text-lg leading-relaxed"><span class="cursor"></span></p>
+            <div class="bg-black/50 p-4 border-l-2 border-[#00ff41]">
+                <p id="interpretation" class="text-base md:text-lg leading-relaxed"><span class="cursor"></span></p>
+            </div>
         </div>
         
         <div id="loading" class="loading relative border-2 border-dashed border-[#00ff41] p-12 bg-[#00ff41]/10 text-center">
             <div class="scan-line"></div>
             <div class="animate-pulse">
-                <p class="text-xl mb-2">DECRYPTING...</p>
+                <p class="text-xl mb-2 text-[#00ff41] font-bold">DECRYPTING SPREAD...</p>
                 <p class="text-xs opacity-70">SYNCING WITH NEURAL NET (MINIMAX M2.5)</p>
             </div>
         </div>
     </div>
 
-    <footer class="mt-auto text-center text-xs opacity-40 pb-4">
-        <p>NERV TACTICAL OPERATIONS DEPT. // CONFIDENTIAL</p>
-    </footer>
-
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js');
-            });
+        // Simple markdown bold parser
+        function parseMarkdown(text) {
+            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         }
 
-        async function drawCard() {
+        async function drawCard(spreadType) {
             const question = document.getElementById('question').value;
-            const btn = document.querySelector('button');
+            const buttons = document.querySelectorAll('button');
             const resultBox = document.getElementById('result-box');
             const loading = document.getElementById('loading');
             
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
+            buttons.forEach(btn => { btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed'); });
             resultBox.classList.add('hidden');
             loading.classList.remove('hidden');
             loading.classList.add('block');
@@ -122,21 +96,49 @@
                 const response = await fetch('/api/draw', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question })
+                    body: JSON.stringify({ question, spread: spreadType })
                 });
                 const data = await response.json();
 
                 if (data.success) {
-                    document.getElementById('card-name').innerText = data.card.name;
-                    document.getElementById('card-direction').innerText = data.card.direction;
+                    const container = document.getElementById('cards-container');
+                    container.innerHTML = '';
+                    
+                    // Set grid columns based on spread type
+                    if (spreadType === 'single') container.className = 'grid grid-cols-1 md:grid-cols-1 max-w-sm mx-auto gap-4 mb-8 pb-6 border-b border-[#00ff41]/30';
+                    if (spreadType === 'time_flow') container.className = 'grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 pb-6 border-b border-[#00ff41]/30';
+                    if (spreadType === 'choice') container.className = 'grid grid-cols-1 md:grid-cols-5 gap-2 mb-8 pb-6 border-b border-[#00ff41]/30';
+
+                    // Labels for different spreads
+                    const getLabel = (spread, index) => {
+                        if(spread === 'single') return '神諭';
+                        if(spread === 'time_flow') return ['過去', '現在', '未來'][index];
+                        if(spread === 'choice') return ['現況', 'A過程', 'A結果', 'B過程', 'B結果'][index];
+                    };
+
+                    data.cards.forEach((card, index) => {
+                        const cardHtml = `
+                            <div class="card-glitch relative border border-[#00ff41] p-4 text-center transition-all">
+                                <div class="absolute top-1 left-2 text-[10px] opacity-60">[ ${getLabel(spreadType, index)} ]</div>
+                                <div class="text-4xl mt-3 mb-2">🃏</div>
+                                <h3 class="text-xl font-bold tracking-widest">${card.name_tw}</h3>
+                                <p class="text-sm opacity-80 mt-1">${card.direction}</p>
+                            </div>
+                        `;
+                        container.innerHTML += cardHtml;
+                    });
                     
                     const interpEl = document.getElementById('interpretation');
-                    interpEl.innerHTML = `<span class="mr-2 text-xl">▶</span>${data.interpretation}<span class="cursor"></span>`;
+                    const formattedText = parseMarkdown(data.interpretation);
+                    interpEl.innerHTML = `<span class="mr-2 text-xl text-[#00ff41]">▶</span>${formattedText}<span class="cursor"></span>`;
                     
                     loading.classList.remove('block');
                     loading.classList.add('hidden');
                     resultBox.classList.remove('hidden');
                     resultBox.classList.add('block');
+                    
+                    // Scroll to result
+                    resultBox.scrollIntoView({ behavior: 'smooth' });
                 } else {
                     alert('SYSTEM_ERROR: ' + data.error);
                 }
@@ -145,8 +147,7 @@
             } finally {
                 loading.classList.remove('block');
                 loading.classList.add('hidden');
-                btn.disabled = false;
-                btn.classList.remove('opacity-50');
+                buttons.forEach(btn => { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); });
             }
         }
     </script>
