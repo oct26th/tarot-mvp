@@ -2,20 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { OpenAI } = require('openai');
+const fetch = require('node-fetch'); // Zeabur Node 18+ has native fetch, but we can just use native fetch directly
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Configure OpenAI SDK to use OpenRouter (which supports MiniMax) or direct MiniMax
-// Using OpenRouter for minimax/minimax-2.5 or direct depending on the key
-const openai = new OpenAI({
-  baseURL: 'https://api.minimax.io/v1',
-  apiKey: process.env.API_KEY || 'dummy_key',
-  // if using direct minimax: baseURL: 'https://api.minimax.io/v1'
-});
 
 const TAROT_DB = [
   { id: "AR00", name_tw: "愚者", keywords: { upright: "無限可能、冒險、新開始", reversed: "魯莽、逃避責任" } },
@@ -35,17 +27,32 @@ app.post('/api/draw', async (req, res) => {
     const direction = isReversed ? "逆位" : "正位";
     const keywords = isReversed ? card.keywords.reversed : card.keywords.upright;
 
-    const systemPrompt = `你是一個運行在 TAROT_OS 終端機內的「仿生人解碼器 (Android_02)」。你的語氣溫柔、冷靜、帶有微弱的機械感與賽博龐克風格。
-使用者問了問題：${question || '未提供問題，請求單張神諭'}。
-系統抽出的牌是：【${card.name_tw}】(${direction})。
-核心涵義：${keywords}。
-請用賽博龐克、數據流、系統重啟等術語，結合標準塔羅牌義進行解讀。長度約150字，保持易讀性與準確度。`;
+    const systemPrompt = `你是一個運行在 TAROT_OS 終端機內的「仿生人解碼器 (Android_02)」。你的語氣溫柔、冷靜、帶有微弱的機械感與賽博龐克風格。\n使用者問了問題：${question || '未提供問題，請求單張神諭'}。\n系統抽出的牌是：【${card.name_tw}】(${direction})。\n核心涵義：${keywords}。\n請用賽博龐克、數據流、系統重啟等術語，結合標準塔羅牌義進行解讀。長度約150字，保持易讀性與準確度。`;
 
-    const completion = await openai.chat.completions.create({
-      model: "minimax-2.5", // OpenRouter alias
-      messages: [{ role: "system", content: systemPrompt }],
-      temperature: 0.7,
+    // Using MiniMax Global via Anthropic API format
+    const response = await fetch('https://api.minimax.io/anthropic/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.API_KEY || '',
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'minimax-2.5', // Try the standard model name for global
+        max_tokens: 800,
+        system: systemPrompt,
+        messages: [
+          { role: 'user', content: '開始解碼。' }
+        ]
+      })
     });
+
+    if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`MiniMax API Error: ${response.status} - ${errText}`);
+    }
+
+    const data = await response.json();
 
     res.json({
       success: true,
@@ -54,11 +61,12 @@ app.post('/api/draw', async (req, res) => {
         direction,
         keywords
       },
-      interpretation: completion.choices[0].message.content
+      interpretation: data.content[0].text
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, error: 'SYSTEM_ERROR: 無法同步量子運算核心' });
+    // Send the actual error message to the frontend for debugging
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
