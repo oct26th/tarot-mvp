@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Configure OpenAI SDK to use OpenRouter (which supports MiniMax) or direct MiniMax
 // Using OpenRouter for minimax/minimax-2.5 or direct depending on the key
 const openai = new OpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
+  baseURL: 'https://api.minimax.chat/v1',
   apiKey: process.env.API_KEY || 'dummy_key',
   // if using direct minimax: baseURL: 'https://api.minimax.chat/v1'
 });
@@ -42,7 +42,7 @@ app.post('/api/draw', async (req, res) => {
 請用賽博龐克、數據流、系統重啟等術語，結合標準塔羅牌義進行解讀。長度約150字，保持易讀性與準確度。`;
 
     const completion = await openai.chat.completions.create({
-      model: "minimax/minimax-2.5", // OpenRouter alias
+      model: "minimax-2.5", // OpenRouter alias
       messages: [{ role: "system", content: systemPrompt }],
       temperature: 0.7,
     });
