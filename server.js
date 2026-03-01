@@ -643,6 +643,84 @@ ${cardsPromptText}
   }
 });
 
+// 追問端點 - 支援對話式追問
+app.post('/api/ask', async (req, res) => {
+  try {
+    const { history, question, originalContext } = req.body;
+    
+    if (!question) {
+      return res.status(400).json({ success: false, error: 'Missing question parameter' });
+    }
+
+    // 組裝對話歷史為 Context
+    let contextText = '';
+    
+    // 加入原始抽牌資訊
+    if (originalContext) {
+      contextText += `[原始牌陣]\n${originalContext}\n\n`;
+    }
+    
+    // 加入對話歷史
+    if (history && Array.isArray(history)) {
+      contextText += `[對話歷史]\n`;
+      history.forEach((msg, idx) => {
+        contextText += `${msg.role === 'user' ? '【使用者】' : '【系統】'}: ${msg.content}\n`;
+      });
+    }
+
+    const systemPrompt = `你是一個運行在 TAROT_OS 終端機內的「仿生人解碼器 (Android_02)」。語氣溫柔、冷靜、帶有賽博龐克風格。
+請根據以下牌陣資訊與對話歷史，回答使用者的追問。
+
+${contextText}
+
+請用賽博龐克、數據流、系統重啟等術語，結合牌義進行邏輯嚴密的回覆。保持易讀性，使用 Markdown 粗體強調重點。字數控制在 200 字左右。`;
+
+    const response = await fetch('https://api.minimax.io/anthropic/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.API_KEY || '',
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'minimax-2.5',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: question }]
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`MiniMax API Error: ${response.status} - ${errText}`);
+    }
+
+    const data = await response.json();
+    
+    let answerText = '';
+    if (data && data.content && Array.isArray(data.content)) {
+      const textElement = data.content.find(item => item.text);
+      if (textElement && textElement.text) {
+        answerText = textElement.text;
+      } else {
+        answerText = JSON.stringify(data.content);
+      }
+    } else {
+      answerText = JSON.stringify(data);
+    }
+
+    answerText = answerText.replace(/\n/g, '<br/>');
+
+    res.json({
+      success: true,
+      answer: answerText
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`TAROT_OS Backend Online on port ${PORT}`);
