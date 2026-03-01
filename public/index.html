@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAROT_OS // TACTICAL_STRATEGY_UNIT v5.0.0</title>
+    <title>TAROT_OS // TACTICAL_STRATEGY_UNIT v5.1.1</title>
     <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -118,7 +118,7 @@
         <div>
             <div class="flex items-center gap-3">
                 <span class="text-xs bg-white/10 px-2 py-0.5 text-white">CLASSIFIED</span>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-[0.3em] text-white">TAROT_OS <span class="text-xs opacity-50 font-normal">v5.1.0 (TACTICAL_OS)</span></h1>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-[0.3em] text-white">TAROT_OS <span class="text-xs opacity-50 font-normal">v5.1.1 (TACTICAL_OS)</span></h1>
             </div>
             <p class="text-[10px] mt-2 tracking-widest text-white/40 uppercase">Terminal Connection: Established // Signal: High_Fidelity // Node: 26</p>
         </div>
@@ -144,25 +144,51 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-4">
                 <button onclick="drawCard('single')" class="group border border-[#2d2f33] p-4 hover:bg-white hover:text-black transition-all flex flex-col justify-between items-start text-left h-full">
-                    <div class="mb-2">
-                        <span class="text-[9px] block opacity-50 group-hover:opacity-100 mb-1">[01_SINGLE_UNIT]</span>
-                        <span class="text-sm font-bold tracking-widest uppercase">單張神諭</span>
+                    <div class="mb-2 w-full">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[9px] opacity-50 group-hover:opacity-100">[01_SINGLE_UNIT]</span>
+                            <span class="text-[7px] opacity-20 group-hover:opacity-40 tracking-tighter uppercase">Stat: Active</span>
+                        </div>
+                        <div class="border-l-2 border-blue-500 pl-2">
+                            <span class="text-sm font-bold tracking-widest uppercase block">單張神諭</span>
+                            <span class="text-[8px] opacity-30 group-hover:opacity-60 block tracking-tight mt-0.5">UNIT_ID: CORE_ORACLE</span>
+                        </div>
                     </div>
-                    <p class="text-[10px] opacity-60 mt-auto">▶ 快速解答「是/否」、每日運勢或單一明確問題。</p>
+                    <p class="text-[9px] opacity-20 group-hover:opacity-40 mt-auto font-mono uppercase italic tracking-tighter">
+                        [EXEC: QUICK_SCAN] // BINARY_OUTCOME_PROJECTION
+                    </p>
                 </button>
+
                 <button onclick="drawCard('time_flow')" class="group border border-[#2d2f33] p-4 hover:bg-white hover:text-black transition-all flex flex-col justify-between items-start text-left h-full">
-                    <div class="mb-2">
-                        <span class="text-[9px] block opacity-50 group-hover:opacity-100 mb-1">[03_TEMPORAL_VECTOR]</span>
-                        <span class="text-sm font-bold tracking-widest uppercase">時間之流 (3張)</span>
+                    <div class="mb-2 w-full">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[9px] opacity-50 group-hover:opacity-100">[03_TEMPORAL_VECTOR]</span>
+                            <span class="text-[7px] opacity-20 group-hover:opacity-40 tracking-tighter uppercase">Stat: Active</span>
+                        </div>
+                        <div class="border-l-2 border-blue-500 pl-2">
+                            <span class="text-sm font-bold tracking-widest uppercase block">時間之流</span>
+                            <span class="text-[8px] opacity-30 group-hover:opacity-60 block tracking-tight mt-0.5">UNIT_ID: TIME_CHRONO</span>
+                        </div>
                     </div>
-                    <p class="text-[10px] opacity-60 mt-auto">▶ 顯示事情的過去脈絡、現在狀態與未來可能走向。</p>
+                    <p class="text-[9px] opacity-20 group-hover:opacity-40 mt-auto font-mono uppercase italic tracking-tighter">
+                        [EXEC: TIMELINE_ANALYSIS] // V-P-F_CHRONO_MAP
+                    </p>
                 </button>
+
                 <button onclick="drawCard('choice')" class="group border border-[#2d2f33] p-4 hover:bg-white hover:text-black transition-all flex flex-col justify-between items-start text-left h-full">
-                    <div class="mb-2">
-                        <span class="text-[9px] block opacity-50 group-hover:opacity-100 mb-1">[05_DECISION_MATRIX]</span>
-                        <span class="text-sm font-bold tracking-widest uppercase">二選一陣型 (5張)</span>
+                    <div class="mb-2 w-full">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[9px] opacity-50 group-hover:opacity-100">[05_DECISION_MATRIX]</span>
+                            <span class="text-[7px] opacity-20 group-hover:opacity-40 tracking-tighter uppercase">Stat: Active</span>
+                        </div>
+                        <div class="border-l-2 border-blue-500 pl-2">
+                            <span class="text-sm font-bold tracking-widest uppercase block">二選一陣型</span>
+                            <span class="text-[8px] opacity-30 group-hover:opacity-60 block tracking-tight mt-0.5">UNIT_ID: OPTION_PATH</span>
+                        </div>
                     </div>
-                    <p class="text-[10px] opacity-60 mt-auto">▶ 面臨抉擇時，分析兩種不同選擇的發展過程與最終結果。</p>
+                    <p class="text-[9px] opacity-20 group-hover:opacity-40 mt-auto font-mono uppercase italic tracking-tighter">
+                        [EXEC: PATH_DIVERGENCE] // ALPHA_BETA_SIMULATION
+                    </p>
                 </button>
             </div>
         </section>
