@@ -146,21 +146,21 @@
                 <button onclick="drawCard('single')" class="group border border-[#2d2f33] p-4 hover:bg-white hover:text-black transition-all flex justify-between items-center">
                     <div class="text-left">
                         <span class="text-[9px] block opacity-50 group-hover:opacity-100">[01_SINGLE_UNIT]</span>
-                        <span class="text-sm font-bold tracking-widest uppercase">Quick Recon</span>
+                        <span class="text-sm font-bold tracking-widest uppercase">單張神諭</span>
                     </div>
                     <span class="text-xl opacity-20 group-hover:opacity-100">→</span>
                 </button>
                 <button onclick="drawCard('time_flow')" class="group border border-[#2d2f33] p-4 hover:bg-white hover:text-black transition-all flex justify-between items-center">
                     <div class="text-left">
                         <span class="text-[9px] block opacity-50 group-hover:opacity-100">[03_TEMPORAL_VECTOR]</span>
-                        <span class="text-sm font-bold tracking-widest uppercase">Chronos Analysis</span>
+                        <span class="text-sm font-bold tracking-widest uppercase">時間之流 (3張)</span>
                     </div>
                     <span class="text-xl opacity-20 group-hover:opacity-100">→</span>
                 </button>
                 <button onclick="drawCard('choice')" class="group border border-[#2d2f33] p-4 hover:bg-white hover:text-black transition-all flex justify-between items-center">
                     <div class="text-left">
                         <span class="text-[9px] block opacity-50 group-hover:opacity-100">[05_DECISION_MATRIX]</span>
-                        <span class="text-sm font-bold tracking-widest uppercase">Tactical Pivot</span>
+                        <span class="text-sm font-bold tracking-widest uppercase">二選一陣型 (5張)</span>
                     </div>
                     <span class="text-xl opacity-20 group-hover:opacity-100">→</span>
                 </button>
@@ -251,9 +251,9 @@
                     if (spreadType === 'choice') container.className = 'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4';
 
                     const getLabel = (spread, index) => {
-                        if(spread === 'single') return 'CORE_ORACLE';
-                        if(spread === 'time_flow') return ['TEMPORAL_PAST', 'PRESENT_STATE', 'FUTURE_VECTOR'][index];
-                        if(spread === 'choice') return ['CURRENT_AXIS', 'PATH_ALPHA_PROC', 'PATH_ALPHA_RESULT', 'PATH_BETA_PROC', 'PATH_BETA_RESULT'][index];
+                        if(spread === 'single') return '神諭核心 (CORE)';
+                        if(spread === 'time_flow') return ['過去 (PAST)', '現在 (PRESENT)', '未來 (FUTURE)'][index];
+                        if(spread === 'choice') return ['現況 (AXIS)', '選擇A-過程 (ALPHA_P)', '選擇A-結果 (ALPHA_R)', '選擇B-過程 (BETA_P)', '選擇B-結果 (BETA_R)'][index];
                     };
 
                     data.cards.forEach((card, index) => {
