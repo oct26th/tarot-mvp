@@ -577,33 +577,41 @@ function extractMiniMaxText(data) {
     return JSON.stringify(data.content || data);
 }
 
-app.post('/api/draw', async (req, res) => {
+app.post('/api/draw_cards', (req, res) => {
   try {
-    const { question, spread } = req.body; 
-    
+    const { spread } = req.body;
     let drawCount = 1;
     let spreadName = "單張神諭";
     if (spread === 'time_flow') { drawCount = 3; spreadName = "時間之流 (過去/現在/未來)"; }
     if (spread === 'choice') { drawCount = 5; spreadName = "二選一 (現況/A過程/A結果/B過程/B結果)"; }
 
     const drawnCards = drawCards(drawCount);
+    res.json({ success: true, cards: drawnCards, spreadName });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
+app.post('/api/interpret', async (req, res) => {
+  try {
+    const { question, spread, spreadName, cards } = req.body;
+    
     let cardsPromptText = "";
     if (spread === 'single') {
-        cardsPromptText = `抽出的牌：【${drawnCards[0].name_tw}】(${drawnCards[0].direction}) - 涵義：${drawnCards[0].currentKeywords}`;
+        cardsPromptText = `抽出的牌：【${cards[0].name_tw}】(${cards[0].direction}) - 涵義：${cards[0].currentKeywords}`;
     } else if (spread === 'time_flow') {
         cardsPromptText = `
-        [過去]：【${drawnCards[0].name_tw}】(${drawnCards[0].direction}) - ${drawnCards[0].currentKeywords}
-        [現在]：【${drawnCards[1].name_tw}】(${drawnCards[1].direction}) - ${drawnCards[1].currentKeywords}
-        [未來]：【${drawnCards[2].name_tw}】(${drawnCards[2].direction}) - ${drawnCards[2].currentKeywords}
+        [過去]：【${cards[0].name_tw}】(${cards[0].direction}) - ${cards[0].currentKeywords}
+        [現在]：【${cards[1].name_tw}】(${cards[1].direction}) - ${cards[1].currentKeywords}
+        [未來]：【${cards[2].name_tw}】(${cards[2].direction}) - ${cards[2].currentKeywords}
         `;
     } else if (spread === 'choice') {
         cardsPromptText = `
-        [現況]：【${drawnCards[0].name_tw}】(${drawnCards[0].direction}) - ${drawnCards[0].currentKeywords}
-        [選擇A-過程]：【${drawnCards[1].name_tw}】(${drawnCards[1].direction}) - ${drawnCards[1].currentKeywords}
-        [選擇A-結果]：【${drawnCards[2].name_tw}】(${drawnCards[2].direction}) - ${drawnCards[2].currentKeywords}
-        [選擇B-過程]：【${drawnCards[3].name_tw}】(${drawnCards[3].direction}) - ${drawnCards[3].currentKeywords}
-        [選擇B-結果]：【${drawnCards[4].name_tw}】(${drawnCards[4].direction}) - ${drawnCards[4].currentKeywords}
+        [現況]：【${cards[0].name_tw}】(${cards[0].direction}) - ${cards[0].currentKeywords}
+        [選擇A-過程]：【${cards[1].name_tw}】(${cards[1].direction}) - ${cards[1].currentKeywords}
+        [選擇A-結果]：【${cards[2].name_tw}】(${cards[2].direction}) - ${cards[2].currentKeywords}
+        [選擇B-過程]：【${cards[3].name_tw}】(${cards[3].direction}) - ${cards[3].currentKeywords}
+        [選擇B-結果]：【${cards[4].name_tw}】(${cards[4].direction}) - ${cards[4].currentKeywords}
         `;
     }
 
@@ -640,8 +648,6 @@ ${cardsPromptText}
 
     res.json({
       success: true,
-      cards: drawnCards,
-      spread,
       interpretation: interpretationText
     });
   } catch (error) {

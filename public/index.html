@@ -118,7 +118,7 @@
         <div>
             <div class="flex items-center gap-3">
                 <span class="text-xs bg-white/10 px-2 py-0.5 text-white">CLASSIFIED</span>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-[0.3em] text-white">TAROT_OS <span class="text-xs opacity-50 font-normal">v6.0.1 (TACTICAL_OS)</span></h1>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-[0.3em] text-white">TAROT_OS <span class="text-xs opacity-50 font-normal">v6.1.0 (TACTICAL_OS)</span></h1>
             </div>
             <p class="text-[10px] mt-2 tracking-widest text-white/40 uppercase">Terminal Connection: Established // Signal: High_Fidelity // Node: 26</p>
         </div>
@@ -397,71 +397,91 @@
             loading.classList.remove('hidden');
 
             try {
-                const response = await fetch('/api/draw', {
+                // Step 1: Draw cards instantly
+                const drawResponse = await fetch('/api/draw_cards', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ question, spread: spreadType })
+                    body: JSON.stringify({ spread: spreadType })
                 });
-                const data = await response.json();
+                const drawData = await drawResponse.json();
 
-                if (data.success) {
-                    const container = document.getElementById('cards-container');
-                    container.innerHTML = '';
-                    
-                    if (spreadType === 'single') container.className = 'grid grid-cols-1 max-w-sm mx-auto gap-8';
-                    if (spreadType === 'time_flow') container.className = 'grid grid-cols-1 md:grid-cols-3 gap-6';
-                    if (spreadType === 'choice') container.className = 'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4';
+                if (!drawData.success) {
+                    alert('SYSTEM_ERROR: ' + drawData.error);
+                    return;
+                }
 
-                    const getLabel = (spread, index) => {
-                        if(spread === 'single') return '神諭核心 (CORE)';
-                        if(spread === 'time_flow') return ['過去 (PAST)', '現在 (PRESENT)', '未來 (FUTURE)'][index];
-                        if(spread === 'choice') return ['現況 (AXIS)', '選擇A-過程 (ALPHA_P)', '選擇A-結果 (ALPHA_R)', '選擇B-過程 (BETA_P)', '選擇B-結果 (BETA_R)'][index];
-                    };
+                // Show cards
+                const container = document.getElementById('cards-container');
+                container.innerHTML = '';
+                
+                if (spreadType === 'single') container.className = 'grid grid-cols-1 max-w-sm mx-auto gap-8';
+                if (spreadType === 'time_flow') container.className = 'grid grid-cols-1 md:grid-cols-3 gap-6';
+                if (spreadType === 'choice') container.className = 'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4';
 
-                    data.cards.forEach((card, index) => {
-                        const imgRotationClass = card.isReversed ? 'reversed-card' : '';
-                        const accentColor = card.isReversed ? 'text-red-400' : 'text-blue-400';
+                const getLabel = (spread, index) => {
+                    if(spread === 'single') return '神諭核心 (CORE)';
+                    if(spread === 'time_flow') return ['過去 (PAST)', '現在 (PRESENT)', '未來 (FUTURE)'][index];
+                    if(spread === 'choice') return ['現況 (AXIS)', '選擇A-過程 (ALPHA_P)', '選擇A-結果 (ALPHA_R)', '選擇B-過程 (BETA_P)', '選擇B-結果 (BETA_R)'][index];
+                };
 
-                        const cardHtml = `
-                            <div class="card-frame p-4 bg-[#0f1114]/50 flex flex-col group">
-                                <div class="flex justify-between items-start mb-3 border-b border-white/5 pb-2">
-                                    <span class="text-[9px] tracking-tighter opacity-40">POS_${index.toString().padStart(2, '0')}</span>
-                                    <span class="text-[9px] font-bold tracking-widest text-white/60">${getLabel(spreadType, index)}</span>
-                                </div>
-                                
-                                <div class="mb-4 bg-black overflow-hidden border border-white/5">
-                                    <img src="${card.image}" alt="${card.name_tw}" class="w-full object-cover aspect-[1/1.7] ${imgRotationClass} group-hover:scale-105 transition-all duration-700">
-                                </div>
-                                
-                                <div class="mt-auto">
-                                    <h3 class="text-lg font-bold tracking-widest text-white leading-tight uppercase">${card.name_tw}</h3>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <span class="w-1 h-1 ${card.isReversed ? 'bg-red-500' : 'bg-blue-500'}"></span>
-                                        <p class="text-[10px] font-bold tracking-widest ${accentColor} opacity-80 uppercase">${card.direction}</p>
-                                    </div>
+                drawData.cards.forEach((card, index) => {
+                    const imgRotationClass = card.isReversed ? 'reversed-card' : '';
+                    const accentColor = card.isReversed ? 'text-red-400' : 'text-blue-400';
+
+                    const cardHtml = `
+                        <div class="card-frame p-4 bg-[#0f1114]/50 flex flex-col group animate-in fade-in zoom-in duration-500" style="animation-delay: ${index * 150}ms; animation-fill-mode: backwards;">
+                            <div class="flex justify-between items-start mb-3 border-b border-white/5 pb-2">
+                                <span class="text-[9px] tracking-tighter opacity-40">POS_${index.toString().padStart(2, '0')}</span>
+                                <span class="text-[9px] font-bold tracking-widest text-white/60">${getLabel(spreadType, index)}</span>
+                            </div>
+                            
+                            <div class="mb-4 bg-black overflow-hidden border border-white/5">
+                                <img src="${card.image}" alt="${card.name_tw}" class="w-full object-cover aspect-[1/1.7] ${imgRotationClass} group-hover:scale-105 transition-all duration-700">
+                            </div>
+                            
+                            <div class="mt-auto">
+                                <h3 class="text-lg font-bold tracking-widest text-white leading-tight uppercase">${card.name_tw}</h3>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="w-1 h-1 ${card.isReversed ? 'bg-red-500' : 'bg-blue-500'}"></span>
+                                    <p class="text-[10px] font-bold tracking-widest ${accentColor} opacity-80 uppercase">${card.direction}</p>
                                 </div>
                             </div>
-                        `;
-                        container.innerHTML += cardHtml;
-                    });
-                    
-                    const interpEl = document.getElementById('interpretation');
-                    const formattedText = parseMarkdown(data.interpretation);
+                        </div>
+                    `;
+                    container.innerHTML += cardHtml;
+                });
+                
+                const interpEl = document.getElementById('interpretation');
+                interpEl.innerHTML = `<span class="animate-pulse text-blue-400 font-mono text-sm">▌ DECRYPTING_INTEL_REPORT...</span>`;
+                
+                loading.classList.add('hidden');
+                resultBox.classList.remove('hidden');
+                resultBox.scrollIntoView({ behavior: 'smooth' });
+                
+                // Hide follow-up section initially
+                document.getElementById('follow-up-section').classList.add('hidden');
+
+                // Step 2: Request interpretation
+                const interpResponse = await fetch('/api/interpret', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question, spread: spreadType, spreadName: drawData.spreadName, cards: drawData.cards })
+                });
+                const interpData = await interpResponse.json();
+
+                if (interpData.success) {
+                    const formattedText = parseMarkdown(interpData.interpretation);
                     interpEl.innerHTML = `<div class="font-mono space-y-4 opacity-90">${formattedText}</div><span class="cursor"></span>`;
                     
                     // 顯示追問區域
-                    showFollowUpSection(data.cards, spreadType);
-                    
-                    loading.classList.add('hidden');
-                    resultBox.classList.remove('hidden');
-                    resultBox.scrollIntoView({ behavior: 'smooth' });
+                    showFollowUpSection(drawData.cards, spreadType);
                 } else {
-                    alert('SYSTEM_ERROR: ' + data.error);
+                    interpEl.innerHTML = `<span class="text-red-500">SYSTEM_ERROR: ${interpData.error}</span>`;
                 }
+
             } catch (err) {
                 alert('CONNECTION_FAILED');
             } finally {
-                loading.classList.add('hidden');
                 buttons.forEach(btn => { btn.disabled = false; btn.classList.remove('opacity-30', 'cursor-not-allowed'); });
             }
         }
