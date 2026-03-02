@@ -538,7 +538,6 @@ const TAROT_DB = [
     },
     "image": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Pents14.jpg"
   }
-
 ];
 
 function drawCards(count) {
@@ -556,6 +555,26 @@ function drawCards(count) {
     });
   }
   return drawn;
+}
+
+// Extract actual text response from MiniMax API ignoring reasoning blocks
+function extractMiniMaxText(data) {
+    if (data && data.choices && data.choices.length > 0 && data.choices[0].message) {
+        return data.choices[0].message.content;
+    }
+    
+    if (data && data.content && Array.isArray(data.content)) {
+        // MiniMax reasoning blocks often don't have a specific type but just 'thinking' or are the first object.
+        // We specifically want the object that contains 'text' and NOT 'thinking'.
+        const textElement = data.content.find(item => item.type === 'text' || (item.text && !item.thinking));
+        if (textElement && textElement.text) {
+            return textElement.text;
+        }
+        // Fallback if no specific text block is found
+        const anyText = data.content.find(item => item.text);
+        if (anyText) return anyText.text;
+    }
+    return JSON.stringify(data.content || data);
 }
 
 app.post('/api/draw', async (req, res) => {
@@ -616,19 +635,7 @@ ${cardsPromptText}
     }
 
     const data = await response.json();
-    
-    let interpretationText = '';
-    if (data && data.content && Array.isArray(data.content)) {
-        const textElement = data.content.find(item => item.text);
-        if (textElement && textElement.text) {
-            interpretationText = textElement.text;
-        } else {
-            interpretationText = JSON.stringify(data.content);
-        }
-    } else {
-        interpretationText = JSON.stringify(data);
-    }
-
+    let interpretationText = extractMiniMaxText(data);
     interpretationText = interpretationText.replace(/\n/g, '<br/>');
 
     res.json({
@@ -696,19 +703,7 @@ ${contextText}
     }
 
     const data = await response.json();
-    
-    let answerText = '';
-    if (data && data.content && Array.isArray(data.content)) {
-      const textElement = data.content.find(item => item.text);
-      if (textElement && textElement.text) {
-        answerText = textElement.text;
-      } else {
-        answerText = JSON.stringify(data.content);
-      }
-    } else {
-      answerText = JSON.stringify(data);
-    }
-
+    let answerText = extractMiniMaxText(data);
     answerText = answerText.replace(/\n/g, '<br/>');
 
     res.json({

@@ -118,7 +118,7 @@
         <div>
             <div class="flex items-center gap-3">
                 <span class="text-xs bg-white/10 px-2 py-0.5 text-white">CLASSIFIED</span>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-[0.3em] text-white">TAROT_OS <span class="text-xs opacity-50 font-normal">v6.0.0 (TACTICAL_OS)</span></h1>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-[0.3em] text-white">TAROT_OS <span class="text-xs opacity-50 font-normal">v6.0.1 (TACTICAL_OS)</span></h1>
             </div>
             <p class="text-[10px] mt-2 tracking-widest text-white/40 uppercase">Terminal Connection: Established // Signal: High_Fidelity // Node: 26</p>
         </div>
@@ -209,27 +209,27 @@
             </div>
 
             <!-- 追問區域 -->
-            <div id="follow-up-section" class="hidden mt-8 pt-6 border-t border-white/10">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-green-500"></span>
-                        <span class="text-xs tracking-widest uppercase opacity-60">FOLLOW-UP_QUERY // 追問系統</span>
+            <div id="follow-up-section" class="hidden mt-12 pt-8 border-t-2 border-[#2d2f33]">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 bg-[#f97316] animate-pulse"></div>
+                        <span class="text-sm tracking-widest uppercase font-bold text-white">INTERROGATION_PROTOCOL // 深度解析</span>
                     </div>
-                    <div id="follow-up-counter" class="text-[10px] font-mono opacity-50">
-                        REMAINING_QUERIES: <span id="query-count">3</span>/3
+                    <div id="follow-up-counter" class="text-xs font-mono text-[#f97316]">
+                        CYCLES_REMAINING: <span id="query-count" class="text-white text-lg ml-1">3</span> / 3
                     </div>
                 </div>
                 
-                <div class="flex items-center gap-2 bg-[#0f1114] border border-[#2d2f33] p-3">
-                    <span class="text-green-500 font-mono text-sm">&gt;_</span>
+                <div class="flex items-center gap-3 bg-[#0a0a0b] border-b-2 border-[#f97316] pb-2 mb-6">
+                    <span class="text-[#f97316] font-mono text-xl animate-pulse">&gt;_</span>
                     <input type="text" id="follow-up-input" 
-                           placeholder="輸入追問內容... (例如: 這張牌的逆位含義？)"
-                           class="flex-1 bg-transparent border-none outline-none text-white font-mono text-sm placeholder-white/20"
+                           placeholder="Enter secondary parameters... (e.g. What does the reversed card mean?)"
+                           class="flex-1 bg-transparent border-none outline-none text-white font-mono text-lg placeholder-white/30"
                            maxlength="200">
                 </div>
                 
                 <!-- 追問記錄 Log -->
-                <div id="follow-up-log" class="mt-4 space-y-3 font-mono text-xs"></div>
+                <div id="follow-up-log" class="mt-4 space-y-6 font-mono text-sm"></div>
             </div>
         </div>
     </main>
