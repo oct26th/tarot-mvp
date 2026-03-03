@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+    --bg-deep: #0a0a0b;
+    --ui-grey: #4a4d52;
+    --ui-blue: #7898ab;
+    --ui-green: #4ade80;
+    --ui-border: #2d2f33;
+}
+
+body { 
+    font-family: 'Share Tech Mono', monospace; 
+    background-color: var(--bg-deep); 
+    color: var(--ui-blue);
+    background-image: 
+        radial-gradient(circle, #ffffff05 1px, transparent 1px),
+        linear-gradient(to right, #ffffff02 1px, transparent 1px),
+        linear-gradient(to bottom, #ffffff02 1px, transparent 1px);
+    background-size: 40px 40px, 20px 20px, 20px 20px;
+}
+
+.osint-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.1;
+    background-image: 
+        linear-gradient(var(--ui-blue) 1px, transparent 1px),
+        linear-gradient(90deg, var(--ui-blue) 1px, transparent 1px);
+    background-size: 100px 100px;
+}
+
+.crosshair {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    opacity: 0.4;
+}
+.crosshair::before, .crosshair::after {
+    content: '';
+    position: absolute;
+    background-color: var(--ui-blue);
+}
+.crosshair-tl { top: 10px; left: 10px; }
+.crosshair-tr { top: 10px; right: 10px; }
+.crosshair-bl { bottom: 10px; left: 10px; }
+.crosshair-br { bottom: 10px; right: 10px; }
+.crosshair::before { width: 100%; height: 1px; top: 50%; }
+.crosshair::after { height: 100%; width: 1px; left: 50%; }
+
+.loading-bar-container {
+    width: 100%;
+    height: 4px;
+    background: #1a1c1e;
+    overflow: hidden;
+    border: 1px solid var(--ui-border);
+}
+.loading-bar-progress {
+    width: 0%;
+    height: 100%;
+    background: var(--ui-blue);
+    animation: progress 2s infinite ease-in-out;
+}
+@keyframes progress {
+    0% { width: 0%; left: 0; }
+    50% { width: 70%; left: 15%; }
+    100% { width: 0%; left: 100%; }
+}
+
+.card-frame {
+    border: 1px solid var(--ui-border);
+    transition: border-color 0.3s ease;
+}
+.card-frame:hover {
+    border-color: var(--ui-blue);
+}
+
+.intel-report {
+    background: rgba(15, 17, 20, 0.8);
+    border-left: 4px solid var(--ui-blue);
+    padding: 2rem;
+    line-height: 1.8;
+}
+
+.timestamp { font-size: 0.7rem; color: var(--ui-grey); }
+
+.cursor::after { content: '▊'; animation: blink 1s step-start infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.reversed-card { transform: rotate(180deg); }
+
+strong, b { color: #fff; font-weight: 700; border-bottom: 1px dotted var(--ui-blue); }
