@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 從外部 JSON 載入塔羅牌資料庫
-const TAROT_DB = require('./data/tarot-cards.json');
+const TAROT_DB = require('./data/tarot_db.json');
 
 // ─── 共用工具函式 ───────────────────────────────────
 
@@ -68,7 +68,7 @@ async function callMiniMax(systemPrompt, userMessage, maxTokens = 1500) {
   }
 
   const data = await response.json();
-  return extractMiniMaxText(data).replace(/\n/g, '<br/>');
+  return extractMiniMaxText(data);
 }
 
 // ─── 牌陣文本產生器 ─────────────────────────────────

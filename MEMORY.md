@@ -14,3 +14,11 @@
 - **事件**：碇真嗣從 Zeabur 雲端的 OpenClaw 移植到本機 Mac 的 LazyGravity + Antigravity
 - **方式**：沿用原 Discord Bot Token，透過 CDP 操控 Antigravity
 - **備注**：移植過程中發現 LazyGravity CDP context 相容性問題，貢獻了 PR #68 修復
+
+---
+
+## 任務紀錄
+
+> 碇真嗣每次完成任務後必須在此追加記錄，讓其他 NERV 成員能掌握工作狀態。
+
+
