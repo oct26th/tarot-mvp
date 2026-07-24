@@ -1,7 +1,7 @@
 {
   "name": "tarot-os",
   "version": "1.1.0",
-  "description": "Tarot PWA MVP with Cyberpunk style and MiniMax M2.5",
+  "description": "Tarot PWA MVP with Cyberpunk style and Gemini 2.5 Flash-Lite",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

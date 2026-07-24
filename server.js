@@ -31,44 +31,39 @@ function drawCards(count) {
   return drawn;
 }
 
-// 提取 MiniMax API 回傳的文字內容（忽略 reasoning blocks）
-function extractMiniMaxText(data) {
+// 提取 Gemini(OpenAI 相容端點)回傳的文字內容
+function extractGeminiText(data) {
   if (data?.choices?.[0]?.message) {
     return data.choices[0].message.content;
   }
-  if (data?.content && Array.isArray(data.content)) {
-    const textElement = data.content.find(item => item.type === 'text' || (item.text && !item.thinking));
-    if (textElement?.text) return textElement.text;
-    const anyText = data.content.find(item => item.text);
-    if (anyText) return anyText.text;
-  }
-  return JSON.stringify(data.content || data);
+  return JSON.stringify(data);
 }
 
-// 共用：呼叫 MiniMax API
-async function callMiniMax(systemPrompt, userMessage, maxTokens = 1500) {
-  const response = await fetch('https://api.minimax.io/anthropic/v1/messages', {
+// 共用：呼叫 Gemini API（Google 官方 OpenAI 相容端點）
+async function callGemini(systemPrompt, userMessage, maxTokens = 1500) {
+  const response = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': process.env.API_KEY || '',
-      'anthropic-version': '2023-06-01'
+      'Authorization': `Bearer ${process.env.GEMINI_API_KEY || ''}`
     },
     body: JSON.stringify({
-      model: 'minimax-2.5',
+      model: 'gemini-3.1-flash-lite',
       max_tokens: maxTokens,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userMessage }]
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage }
+      ]
     })
   });
 
   if (!response.ok) {
     const errText = await response.text();
-    throw new Error(`MiniMax API Error: ${response.status} - ${errText}`);
+    throw new Error(`Gemini API Error: ${response.status} - ${errText}`);
   }
 
   const data = await response.json();
-  return extractMiniMaxText(data);
+  return extractGeminiText(data);
 }
 
 // ─── 牌陣文本產生器 ─────────────────────────────────
@@ -127,7 +122,7 @@ ${cardsPromptText}
 
 請用賽博龐克、數據流、系統重啟等術語，結合標準牌義進行邏輯嚴密的解讀。如果有多張牌，請說明它們之間的因果與數據流向。保持易讀性，使用 Markdown 粗體強調重點。字數控制在 300 字左右。`;
 
-    const interpretation = await callMiniMax(systemPrompt, '開始解碼。');
+    const interpretation = await callGemini(systemPrompt, '開始解碼。');
     res.json({ success: true, interpretation });
   } catch (error) {
     console.error(error);
@@ -159,7 +154,7 @@ ${contextText}
 
 請用賽博龐克、數據流、系統重啟等術語，結合牌義進行邏輯嚴密的回覆。保持易讀性，使用 Markdown 粗體強調重點。字數控制在 200 字左右。`;
 
-    const answer = await callMiniMax(systemPrompt, question, 1000);
+    const answer = await callGemini(systemPrompt, question, 1000);
     res.json({ success: true, answer });
   } catch (error) {
     console.error(error);
