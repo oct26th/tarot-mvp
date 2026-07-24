@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fetch = require('node-fetch');
+const { Redis } = require('@upstash/redis');
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,74 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 從外部 JSON 載入塔羅牌資料庫
 const TAROT_DB = require('./data/tarot_db.json');
+
+// ─── 用量防護（per-IP 頻率限制 + 每日金額上限）───────
+
+// Vercel 的 Upstash 整合注入的是 KV_REST_API_* 變數名，不是 @upstash/redis 預設抓的 UPSTASH_REDIS_REST_*
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN
+});
+
+const RATE_LIMIT_PER_HOUR = 15;
+const DAILY_BUDGET_USD = 1;
+const GEMINI_PRICE_PER_TOKEN = { input: 0.25 / 1_000_000, output: 1.5 / 1_000_000 };
+
+function getClientIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) return forwarded.split(',')[0].trim();
+  return req.socket.remoteAddress || 'unknown';
+}
+
+function todayKey() {
+  return `budget:${new Date().toISOString().slice(0, 10)}`;
+}
+
+// 擋掉單一 IP 短時間內狂打的請求
+async function rateLimit(req, res, next) {
+  try {
+    const ip = getClientIp(req);
+    const hourBucket = new Date().toISOString().slice(0, 13);
+    const key = `ratelimit:${ip}:${hourBucket}`;
+    const count = await redis.incr(key);
+    if (count === 1) await redis.expire(key, 3600);
+    if (count > RATE_LIMIT_PER_HOUR) {
+      return res.status(429).json({ success: false, error: '請求過於頻繁，請稍後再試' });
+    }
+    next();
+  } catch (error) {
+    console.error('Rate limit check failed, allowing request:', error.message);
+    next();
+  }
+}
+
+// 擋掉超過當日金額上限的請求
+async function budgetGuard(req, res, next) {
+  try {
+    const spent = parseFloat((await redis.get(todayKey())) || 0);
+    if (spent >= DAILY_BUDGET_USD) {
+      return res.status(429).json({ success: false, error: '今日 AI 額度已用完，請明天再來' });
+    }
+    next();
+  } catch (error) {
+    console.error('Budget check failed, allowing request:', error.message);
+    next();
+  }
+}
+
+async function recordSpend(usage) {
+  if (!usage) return;
+  const cost =
+    (usage.prompt_tokens || 0) * GEMINI_PRICE_PER_TOKEN.input +
+    (usage.completion_tokens || 0) * GEMINI_PRICE_PER_TOKEN.output;
+  try {
+    const key = todayKey();
+    const newTotal = await redis.incrbyfloat(key, cost);
+    if (parseFloat(newTotal) === cost) await redis.expire(key, 60 * 60 * 48);
+  } catch (error) {
+    console.error('Failed to record spend:', error.message);
+  }
+}
 
 // ─── 共用工具函式 ───────────────────────────────────
 
@@ -39,7 +108,7 @@ function extractGeminiText(data) {
   return JSON.stringify(data);
 }
 
-// 共用：呼叫 Gemini API（Google 官方 OpenAI 相容端點）
+// 共用：呼叫 Gemini API（Google 官方 OpenAI 相容端點）。回傳文字與 token 用量，供計費用。
 async function callGemini(systemPrompt, userMessage, maxTokens = 1500) {
   const response = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
     method: 'POST',
@@ -63,7 +132,7 @@ async function callGemini(systemPrompt, userMessage, maxTokens = 1500) {
   }
 
   const data = await response.json();
-  return extractGeminiText(data);
+  return { text: extractGeminiText(data), usage: data.usage };
 }
 
 // ─── 牌陣文本產生器 ─────────────────────────────────
@@ -110,7 +179,7 @@ app.post('/api/draw_cards', (req, res) => {
 });
 
 // 解牌
-app.post('/api/interpret', async (req, res) => {
+app.post('/api/interpret', rateLimit, budgetGuard, async (req, res) => {
   try {
     const { question, spread, spreadName, cards } = req.body;
     const cardsPromptText = buildCardsPrompt(spread, cards);
@@ -122,7 +191,8 @@ ${cardsPromptText}
 
 請用賽博龐克、數據流、系統重啟等術語，結合標準牌義進行邏輯嚴密的解讀。如果有多張牌，請說明它們之間的因果與數據流向。保持易讀性，使用 Markdown 粗體強調重點。字數控制在 300 字左右。`;
 
-    const interpretation = await callGemini(systemPrompt, '開始解碼。');
+    const { text: interpretation, usage } = await callGemini(systemPrompt, '開始解碼。');
+    await recordSpend(usage);
     res.json({ success: true, interpretation });
   } catch (error) {
     console.error(error);
@@ -131,7 +201,7 @@ ${cardsPromptText}
 });
 
 // 追問
-app.post('/api/ask', async (req, res) => {
+app.post('/api/ask', rateLimit, budgetGuard, async (req, res) => {
   try {
     const { history, question, originalContext } = req.body;
     if (!question) {
@@ -154,7 +224,8 @@ ${contextText}
 
 請用賽博龐克、數據流、系統重啟等術語，結合牌義進行邏輯嚴密的回覆。保持易讀性，使用 Markdown 粗體強調重點。字數控制在 200 字左右。`;
 
-    const answer = await callGemini(systemPrompt, question, 1000);
+    const { text: answer, usage } = await callGemini(systemPrompt, question, 1000);
+    await recordSpend(usage);
     res.json({ success: true, answer });
   } catch (error) {
     console.error(error);
